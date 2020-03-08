@@ -1,0 +1,32 @@
+let db = {
+  screams: [
+    {
+      userHandle: "user",
+      body: "this is a user body",
+      createdAt: "2019-02-15T11:46:01.018Z",
+      viewCount: 5,
+      commentCount: 2
+    }
+  ],
+  users: [
+    {
+      email
+      password
+      userType
+      userHandle
+      profileImage
+      dept
+      year
+      bio
+    }
+  ],
+  comments: [
+    {
+      userHandle
+      screamId
+      body
+      createdAt
+    }
+  ]
+
+};
