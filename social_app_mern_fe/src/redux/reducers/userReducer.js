@@ -7,7 +7,9 @@ import {
     SET_UNAUTHENTICATED,
     LOADING_USER,
     LIKE_SCREAM,
-    UNLIKE_SCREAM
+    UNLIKE_SCREAM,
+    UPDATE_POST_IMAGE,
+    SET_GROUPS
 } from "./types";
 
 const initialState = {
@@ -15,7 +17,9 @@ const initialState = {
     credentials: {},
     likes: [],
     notifications: [],
-    loading: false
+    loading: false,
+    groups: [],
+    post_image: ""
 };
 
 export default function(state = initialState, action) {
@@ -29,6 +33,7 @@ export default function(state = initialState, action) {
             return initialState;
         case SET_USER:
             return {
+                ...state,
                 authenticated: true,
                 loading: false,
                 ...action.payload
@@ -55,6 +60,17 @@ export default function(state = initialState, action) {
                 like: state.likes.filter(
                     like => like.screamId == action.payload.screamId
                 )
+            };
+        case UPDATE_POST_IMAGE:
+            return {
+                ...state,
+                post_image: action.payload
+            };
+        case SET_GROUPS:
+            return {
+                ...state,
+                groups: action.payload,
+                loading: false
             };
         default:
             return state;

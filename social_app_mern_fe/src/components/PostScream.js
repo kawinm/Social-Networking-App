@@ -1,30 +1,40 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 import MyButton from "../util/MyButton";
 
 //Redux
 import { connect } from "react-redux";
-import { editUserDetails } from "../redux/actions/userActions";
 import { postScream } from "../redux/actions/dataActions";
 
 //Mui
 import withStyles from "@material-ui/core/styles/withStyles";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 //Icons
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
-const styles = {};
+const styles = theme => ({
+    ...theme.spreadit,
+    submitButton: {
+        position: "relative",
+        float: "right",
+        marginTop: 10
+    },
+    progressSpinner: {
+        position: "absolute"
+    },
+    closeButton: {
+        position: "absolute",
+        left: "91%",
+        top: "6%"
+    }
+});
 
 class PostScream extends Component {
     state = {
@@ -50,7 +60,7 @@ class PostScream extends Component {
     };
     handleSubmit = event => {
         event.preventDefault();
-        this.props.postScream({ body: this.state.body });
+        this.props.postScream({ body: this.state.body, audience: "all" });
     };
     render() {
         const { errors } = this.state;
@@ -82,7 +92,7 @@ class PostScream extends Component {
                                 type="text"
                                 label="SCREAM!"
                                 multiline
-                                row="3"
+                                row="2"
                                 placeholder="Post a circular"
                                 error={errors.body ? true : false}
                                 helperText={errors.body}

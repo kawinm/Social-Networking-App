@@ -67,9 +67,8 @@ const ThemeDark = {
         //Scream
         card: {
             display: "flex",
-            margin: "15px 5px 15px 5px",
+            margin: "15px 5px 32px 5px",
             width: "100%",
-
             boxShadow:
                 "0px 5px 5px -3px rgba(48,79,254,0.2), 0px 8px 10px 1px rgba(48,79,254,0.14), 0px 3px 14px 2px rgba(48,79,254,0.45)"
         },
@@ -107,6 +106,10 @@ const ThemeDark = {
 
         mainContent: {
             margin: "12px 12px"
+        },
+
+        progressSpinner: {
+            position: "absolute"
         }
     }
 };

@@ -2,6 +2,11 @@ const { db } = require("../util/admin");
 
 exports.getAllScreams = (req, res) => {
     db.collection("screams")
+        .where("audience", "in", [
+            "all",
+            `${req.user.dept}`,
+            `${req.user.dept}${req.user.sem}`
+        ])
         .orderBy("createdAt", "desc")
         .get()
         .then(data => {
@@ -12,7 +17,8 @@ exports.getAllScreams = (req, res) => {
                     body: doc.data().body,
                     userHandle: doc.data().userHandle,
                     createdAt: doc.data().createdAt,
-                    userImage: doc.data().userImage
+                    userImage: doc.data().userImage,
+                    postImage: doc.data().postImage
                 });
             });
             return res.json(screams);
@@ -25,14 +31,29 @@ exports.postOneScream = (req, res) => {
         return res.status(400).json({ body: "Body must not be empty " });
     }
 
-    const newScream = {
-        body: req.body.body,
-        userHandle: req.user.handle,
-        userImage: req.user.imageUrl,
-        createdAt: new Date().toISOString(),
-        likeCount: 0,
-        commentCount: 0
-    };
+    var newScream;
+    if (req.body.imageUrl) {
+        newScream = {
+            body: req.body.body,
+            postImage: req.body.imageUrl,
+            audience: req.body.audience,
+            userHandle: req.user.handle,
+            userImage: req.user.imageUrl,
+            createdAt: new Date().toISOString(),
+            likeCount: 0,
+            commentCount: 0
+        };
+    } else {
+        newScream = {
+            body: req.body.body,
+            audience: req.body.audience,
+            userHandle: req.user.handle,
+            userImage: req.user.imageUrl,
+            createdAt: new Date().toISOString(),
+            likeCount: 0,
+            commentCount: 0
+        };
+    }
 
     db.collection("screams")
         .add(newScream)

@@ -47,7 +47,7 @@ class signup extends Component {
             password: this.state.password,
             confirmpassword: this.state.confirmpassword,
             handle: this.state.handle,
-            type: "student"
+            type: "staff"
         };
         this.props.signupUser(newUserData, this.props.history);
     };
@@ -84,7 +84,7 @@ class signup extends Component {
                                 variant="h2"
                                 className={classes.pageTitle}
                             >
-                                Signup
+                                Staff Signup
                             </Typography>
                             <form noValidate onSubmit={this.handleSubmit}>
                                 <TextField
@@ -187,9 +187,9 @@ class signup extends Component {
                                 variant="contained"
                                 color="secondary"
                                 component={Link}
-                                to="/staffsignup"
+                                to="/signup"
                             >
-                                Staff Signup
+                                Signup
                             </Button>
                         </div>
                     </Paper>

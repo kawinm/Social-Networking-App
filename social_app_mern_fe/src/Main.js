@@ -8,6 +8,8 @@ import ThemeDark from "./ThemeDark";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import chat from "./pages/chat";
+import staffsignup from "./pages/staffsignup";
 
 //MUI
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -39,11 +41,17 @@ class Main extends Component {
                     <div class="container">
                         <Switch>
                             <Route exact path="/" component={home} />
+                            <Route exact path="/chat" component={chat} />
                             <AuthRoute exact path="/login" component={login} />
                             <AuthRoute
                                 exact
                                 path="/signup"
                                 component={signup}
+                            />
+                            <AuthRoute
+                                exact
+                                path="/staffsignup"
+                                component={staffsignup}
                             />
                         </Switch>
                     </div>

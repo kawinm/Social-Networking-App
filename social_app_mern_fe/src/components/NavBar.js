@@ -16,9 +16,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Hidden from "@material-ui/core/Hidden";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import MuiLink from "@material-ui/core/Link";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import ChatIcon from "@material-ui/icons/Chat";
 
 //Icons
 import HomeIcon from "@material-ui/icons/Home";
@@ -39,7 +39,7 @@ class NavBar extends Component {
     render() {
         const {
             authenticated,
-            UI: { loading, theme }
+            UI: { theme }
         } = this.props;
         return (
             <AppBar>
@@ -72,6 +72,11 @@ class NavBar extends Component {
                                 </MyButton>
                             </Link>
                             <PostScream />
+                            <Link to="/chat">
+                                <MyButton tip="Chat">
+                                    <ChatIcon color="inherit" />
+                                </MyButton>
+                            </Link>
                             <MyButton tip="Notifications">
                                 <Notifications color="inherit" />
                             </MyButton>

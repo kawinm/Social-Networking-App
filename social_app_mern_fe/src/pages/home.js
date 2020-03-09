@@ -54,7 +54,14 @@ class home extends Component {
                         {recentScreamsMarkup}
                     </div>
                 </Grid>
-                <Grid className={classes.profile} item sm={12} md={3} xs={12}>
+                <Grid
+                    className={classes.profile}
+                    item
+                    direction="column"
+                    sm={12}
+                    md={3}
+                    xs={12}
+                >
                     <Profile />
                 </Grid>
             </Grid>

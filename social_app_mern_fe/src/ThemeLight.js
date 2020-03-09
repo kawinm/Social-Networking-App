@@ -103,6 +103,10 @@ const ThemeLight = {
 
         mainContent: {
             margin: "12px 12px"
+        },
+
+        progressSpinner: {
+            position: "absolute"
         }
     }
 };

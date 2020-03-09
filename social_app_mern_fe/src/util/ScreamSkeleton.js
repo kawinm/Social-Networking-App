@@ -1,25 +1,19 @@
 import React, { Component, Fragment } from "react";
-import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
 
 import ThemeLight from "../ThemeLight";
-import ThemeDark from "../ThemeDark";
 
 import DefaultProfileImage from "../images/default-profile-image.png";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
-import { connect } from "react-redux";
-import { likeScream, unlikeScream } from "../redux/actions/dataActions";
 
 const styles = theme => ({
     ...theme.spreadit
@@ -38,7 +32,7 @@ export class ScreamSkeleton extends Component {
         dayjs.extend(relativeTime);
         const { classes } = this.props;
 
-        const content = Array.from({ length: 5 }).map((item, index) => (
+        const content = Array.from({ length: 5 }).map(() => (
             <Card className={classes.card} raised>
                 <CardContent className={classes.content}>
                     <div className={classes.title}>

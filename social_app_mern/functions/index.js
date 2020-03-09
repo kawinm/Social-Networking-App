@@ -20,13 +20,16 @@ const {
     login,
     uploadImage,
     addUserDetails,
-    getAuthenticatedUser
+    getAuthenticatedUser,
+    uploadPostImage,
+    createGroup,
+    getAllGroups
 } = require("./handlers/users");
 
 const FBAuth = require("./util/fbAuth");
 
 //Screams route
-app.get("/scream", getAllScreams);
+app.get("/scream", FBAuth, getAllScreams);
 app.post("/scream", FBAuth, postOneScream);
 app.get("/scream/:screamId", getScream);
 app.post("/scream/:screamId/comment", FBAuth, commentOnScream);
@@ -40,5 +43,8 @@ app.post("/login", login);
 app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
 app.get("/user", FBAuth, getAuthenticatedUser);
+app.post("/scream/image", FBAuth, uploadPostImage);
+app.get("/group", FBAuth, getAllGroups);
+app.post("/group/create", FBAuth, createGroup);
 
 exports.api = functions.region("asia-east2").https.onRequest(app);

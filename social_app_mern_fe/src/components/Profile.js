@@ -6,7 +6,11 @@ import dayjs from "dayjs";
 
 import EditDetails from "./EditDetails";
 
+import DefaultProfileImage from "../images/default-profile-image.png";
+
 import MyButton from "../util/MyButton";
+
+import CreateClassroom from "./CreateClassroom";
 
 //Redux
 import { connect } from "react-redux";
@@ -14,14 +18,13 @@ import { logoutUser, uploadImage } from "../redux/actions/userActions";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
 import Paper from "@material-ui/core/Paper";
 import MuiLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 //Icons
 import LocationOn from "@material-ui/icons/LocationOn";
-import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import EditIcon from "@material-ui/icons/Edit";
 import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
@@ -116,6 +119,9 @@ const styles = {
         "& a": {
             margin: "20px 10px"
         }
+    },
+    handle_skeleton: {
+        backgroundColor: "#304ffe"
     }
 };
 
@@ -143,7 +149,7 @@ export class Profile extends Component {
                     imageUrl,
                     bio,
                     dept,
-                    userType,
+                    type,
                     sem
                 },
                 loading,
@@ -153,68 +159,83 @@ export class Profile extends Component {
 
         let profileMarkup = !loading ? (
             authenticated ? (
-                <Paper className={classes.paper}>
-                    <div className={classes.profile}>
-                        <div className="image-wrapper">
-                            <img
-                                src={imageUrl}
-                                alt="profile"
-                                className="profile-image"
-                            />
-                            <input
-                                type="file"
-                                id="imageInput"
-                                hidden="hidden"
-                                onChange={this.handleImageChange}
-                            />
+                <Fragment>
+                    <Paper className={classes.paper}>
+                        <div className={classes.profile}>
+                            <div className="image-wrapper">
+                                <img
+                                    src={imageUrl}
+                                    alt="profile"
+                                    className="profile-image"
+                                />
+                                <input
+                                    type="file"
+                                    id="imageInput"
+                                    hidden="hidden"
+                                    onChange={this.handleImageChange}
+                                />
+                                <MyButton
+                                    tip="Edit profile picture"
+                                    onClick={this.handleEditPicture}
+                                    btnClassName="button"
+                                >
+                                    <EditIcon color="primary" />
+                                </MyButton>
+                            </div>
+                            <hr />
+                            <div className={classes.profile_details}>
+                                <MuiLink
+                                    component={Link}
+                                    to={`/users/${handle}`}
+                                    color="primary"
+                                    variant="h5"
+                                >
+                                    @{handle}
+                                </MuiLink>
+                                <hr />
+                                {bio && (
+                                    <Typography variant="body2">
+                                        {bio}
+                                    </Typography>
+                                )}
+                                <hr />
+                                {type && (
+                                    <Typography variant="body2">
+                                        {type.toUpperCase()}
+                                    </Typography>
+                                )}
+                                <hr />
+                                {dept && (
+                                    <Fragment>
+                                        <LocationOn color="primary" />{" "}
+                                        <span>
+                                            {dept}
+                                            {type !== "staff" &&
+                                                sem &&
+                                                Math.ceil(sem / 2)}
+                                        </span>
+                                    </Fragment>
+                                )}
+                                <hr />
+                                <CalendarToday color="primary" />
+                                <span>
+                                    Joined {dayjs(createdAt).format("MMM YYYY")}
+                                </span>
+                            </div>
                             <MyButton
-                                tip="Edit profile picture"
-                                onClick={this.handleEditPicture}
+                                tip="Logout"
+                                onClick={this.handleLogout}
                                 btnClassName="button"
                             >
-                                <EditIcon color="primary" />
+                                <KeyboardReturn color="primary" />
                             </MyButton>
+                            <EditDetails />
                         </div>
-                        <hr />
-                        <div className={classes.profile_details}>
-                            <MuiLink
-                                component={Link}
-                                to={`/users/${handle}`}
-                                color="primary"
-                                variant="h5"
-                            >
-                                @{handle}
-                            </MuiLink>
-                            <hr />
-                            {bio && (
-                                <Typography variant="body2">{bio}</Typography>
-                            )}
-                            <hr />
-                            {dept && (
-                                <Fragment>
-                                    <LocationOn color="primary" />{" "}
-                                    <span>
-                                        {dept}
-                                        {sem && Math.ceil(sem / 2)}
-                                    </span>
-                                </Fragment>
-                            )}
-                            <hr />
-                            <CalendarToday color="primary" />
-                            <span>
-                                Joined {dayjs(createdAt).format("MMM YYYY")}
-                            </span>
-                        </div>
-                        <MyButton
-                            tip="Logout"
-                            onClick={this.handleLogout}
-                            btnClassName="button"
-                        >
-                            <KeyboardReturn color="primary" />
-                        </MyButton>
-                        <EditDetails />
-                    </div>
-                </Paper>
+                    </Paper>
+                    <Paper className={classes.paper}>
+                        <CreateClassroom />
+                    </Paper>
+                </Fragment>
             ) : (
                 <Paper className={classes.paper}>
                     <Typography variant="body2" align="center">
@@ -241,7 +262,41 @@ export class Profile extends Component {
                 </Paper>
             )
         ) : (
-            <p>Loading... </p>
+            <Paper className={classes.paper}>
+                <div className={classes.profile}>
+                    <div className="image-wrapper">
+                        <img
+                            src={DefaultProfileImage}
+                            alt="profile"
+                            className="profile-image"
+                        />
+                    </div>
+                    <hr />
+                    <div className={classes.profile_details}>
+                        <Skeleton
+                            className={classes.handle_skeleton}
+                            animation="wave"
+                            width="100%"
+                            style={{ marginBottom: 5 }}
+                        />
+                        <Skeleton
+                            animation="wave"
+                            width="100%"
+                            style={{ marginBottom: 5 }}
+                        />
+                        <Skeleton
+                            animation="wave"
+                            width="100%"
+                            style={{ marginBottom: 5 }}
+                        />
+                        <Skeleton
+                            animation="wave"
+                            width="100%"
+                            style={{ marginBottom: 5 }}
+                        />
+                    </div>
+                </div>
+            </Paper>
         );
         return profileMarkup;
     }

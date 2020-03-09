@@ -4,7 +4,9 @@ import {
     CLEAR_ERRORS,
     LOADING_UI,
     SET_UNAUTHENTICATED,
-    LOADING_USER
+    LOADING_USER,
+    UPDATE_POST_IMAGE,
+    SET_GROUPS
 } from "../reducers/types";
 import axios from "axios";
 
@@ -73,6 +75,17 @@ export const uploadImage = formData => dispatch => {
         .catch(err => console.log(err));
 };
 
+export const uploadPostImage = formData => dispatch => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post("/scream/image", formData)
+        .then(res => {
+            dispatch({ type: CLEAR_ERRORS });
+            dispatch({ type: UPDATE_POST_IMAGE, payload: res.data.imageUrl });
+        })
+        .catch(err => console.log(err));
+};
+
 export const editUserDetails = userDetails => dispatch => {
     dispatch({ type: LOADING_USER });
     axios
@@ -87,4 +100,33 @@ const setAuthorizationHeader = token => {
     const FBIdToken = `Bearer ${token}`;
     localStorage.setItem("FBIdToken", FBIdToken);
     axios.defaults.headers.common["Authorization"] = FBIdToken;
+};
+
+export const createClassroom = groupDetails => dispatch => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .post("/group/create", groupDetails)
+        .then(() => {
+            dispatch({ type: CLEAR_ERRORS });
+        })
+        .catch(err => console.log(err));
+};
+
+export const getGroups = () => dispatch => {
+    dispatch({ type: LOADING_UI });
+    axios
+        .get("/group")
+        .then(res => {
+            dispatch({
+                type: SET_GROUPS,
+                payload: res.data
+            });
+            dispatch({ type: CLEAR_ERRORS });
+        })
+        .catch(err => {
+            dispatch({
+                type: SET_GROUPS,
+                payload: []
+            });
+        });
 };

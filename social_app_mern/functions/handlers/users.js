@@ -171,6 +171,67 @@ exports.uploadImage = (req, res) => {
     busboy.end(req.rawBody);
 };
 
+exports.uploadPostImage = (req, res) => {
+    const BusBoy = require("busboy");
+    const path = require("path");
+    const os = require("os");
+    const fs = require("fs");
+
+    let folder = "Post Image";
+
+    const busboy = new BusBoy({ headers: req.headers });
+
+    let imageFileName;
+    let imageToBeUploaded = {};
+
+    busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+        console.log(mimetype);
+
+        if (!mimetype.includes("image")) {
+            return res.status(400).json({ error: "Wrong filetype submitted" });
+        }
+
+        let imageExtension = filename.split(".")[
+            filename.split(".").length - 1
+        ];
+        imageFileName = `${Math.round(
+            Math.random() * 1000000000000
+        )}.${imageExtension}`;
+
+        let filepath = path.join(os.tmpdir(), imageFileName);
+        imageToBeUploaded = { filepath, mimetype };
+
+        file.pipe(fs.createWriteStream(filepath));
+    });
+    busboy.on("finish", () => {
+        admin
+            .storage()
+            .bucket(config.storageBucket)
+            .upload(imageToBeUploaded.filepath, {
+                destination: `${folder}/${imageFileName}`,
+                resumable: false,
+                metadata: {
+                    metadata: {
+                        contentType: imageToBeUploaded.mimetype
+                    }
+                }
+            })
+            .then(() => {
+                const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/Post%20Image%2F${imageFileName}?alt=media`;
+                res.set("Access-Control-Allow-Origin", "*");
+                var data = {
+                    imageUrl: imageUrl
+                };
+                return res.json(data);
+            })
+            .catch(err => {
+                console.error(err);
+                return res.status(500).json({ error: err.code });
+            });
+    });
+    busboy.end(req.rawBody);
+};
+
 exports.addUserDetails = (req, res) => {
     let userDetails = reduceUserDetails(req.body);
 
@@ -214,4 +275,48 @@ exports.getAuthenticatedUser = (req, res) => {
             res.status(500).json({ error: `something went wrong` });
             console.error(err);
         });
+};
+
+exports.createGroup = (req, res) => {
+    var newGroup = {
+        subject: req.body.subject,
+        dept: req.body.dept,
+        sem: req.body.sem,
+        createdBy: req.user.handle,
+        createdAt: new Date().toISOString()
+    };
+
+    db.collection("groups")
+        .add(newGroup)
+        .then(doc => {
+            const resGroup = newGroup;
+            resGroup.GroupId = doc.id;
+            return res.json(resGroup);
+        })
+        .catch(err => {
+            res.status(500).json({ error: `something went wrong` });
+            console.error(err);
+        });
+};
+
+exports.getAllGroups = (req, res) => {
+    db.collection("groups")
+        .where("dept", "==", `${req.user.dept}`)
+        .orderBy("createdAt", "desc")
+        .get()
+        .then(data => {
+            let groups = [];
+            data.forEach(doc => {
+                groups.push({
+                    groupId: doc.id,
+                    subject: doc.data().subject,
+                    dept: doc.data().dept,
+                    sem: doc.data().sem,
+                    createdAt: doc.data().createdAt,
+                    createdBy: doc.data().createdBy
+                });
+            });
+            return res.json(groups);
+        })
+        .catch(err => console.error(err));
 };
