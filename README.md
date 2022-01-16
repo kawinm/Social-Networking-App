@@ -1,4 +1,4 @@
-# College Network
+# Social Networking App
 
 ##### Live at https://lets-go-8871b.web.app/
 
